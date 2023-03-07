@@ -3,8 +3,9 @@ import {
   getServerSession,
   type NextAuthOptions,
   type DefaultSession,
+  type TokenSet,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import GitHubProvider from "next-auth/providers/github";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
@@ -37,19 +38,65 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session({ session, user }) {
+    async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
-        // session.user.role = user.role; <-- put other properties on the session here
+      }
+      const [account] = await prisma.account.findMany({
+        where: { userId: user.id, provider: "github" },
+      });
+      if (account?.expires_at && account?.expires_at * 1000 < Date.now()) {
+        // If the access token has expired, try to refresh it
+        try {
+          const response = await fetch(
+            "https://github.com/login/oauth/access_token",
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify({
+                client_id: env.GITHUB_CLIENT_ID,
+                client_secret: env.GITHUB_CLIENT_SECRET,
+                refresh_token: account?.refresh_token,
+                grant_type: "refresh_token",
+              }),
+              method: "POST",
+            }
+          );
+
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const tokens: TokenSet & { expires_in: number } =
+            await response.json();
+
+          if (!response.ok) throw tokens;
+          console.log(JSON.stringify(tokens));
+
+          await prisma.account.update({
+            data: {
+              access_token: tokens.access_token,
+              expires_at: Math.floor(Date.now() / 1000 + tokens.expires_in),
+              refresh_token: tokens.refresh_token ?? account?.refresh_token,
+            },
+            where: {
+              provider_providerAccountId: {
+                provider: "github",
+                providerAccountId: account?.providerAccountId,
+              },
+            },
+          });
+        } catch (error) {
+          console.error("Error refreshing access token", error);
+        }
       }
       return session;
     },
   },
   adapter: PrismaAdapter(prisma),
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+    GitHubProvider({
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
     }),
     /**
      * ...add more providers here.
