@@ -15,7 +15,7 @@ import {
 const Navbar = () => {
   const { data: sessionData } = useSession();
   return (
-    <nav className="sticky top-0 z-50 w-full">
+    <nav className="sticky top-0 z-50 w-full bg-white">
       <div className="mx-auto px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex flex-row justify-start md:pl-32">
