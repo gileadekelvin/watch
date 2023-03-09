@@ -1,11 +1,14 @@
-import { api } from "~/utils/api";
 import { formatDistance } from "date-fns";
 import {
   GitPullRequest,
   GitPullRequestDraft,
   Tags,
   Siren,
+  FileSignature,
 } from "lucide-react";
+
+import { api } from "~/utils/api";
+import Loading from "~/components/ui/loading";
 
 const extractOwnerAndRepoFromUrl = (url: string) => {
   const matches = url.match(/^https?:\/\/github\.com\/([^/]+)\/([^/]+)/);
@@ -20,13 +23,16 @@ const extractOwnerAndRepoFromUrl = (url: string) => {
 };
 
 const Overview = () => {
-  const { data } = api.github.getPullRequests.useQuery();
+  const { data, isLoading } = api.github.getPullRequests.useQuery();
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
-      {data?.data?.items?.map((item) => {
+      {data?.items?.map((item) => {
         const { owner, repo } = extractOwnerAndRepoFromUrl(item.html_url);
-        console.log(item);
         return (
           <a
             key={item.id}
@@ -68,9 +74,9 @@ const Overview = () => {
                   </p>
                 </div>
               </div>
-              {item.draft && (
+              {(item.draft || item.review_required) && (
                 <div className="flex flex-row items-start gap-2">
-                  <Siren className="h-4 w-4 text-gray-500" />
+                  <Siren className="h-5 w-5 text-gray-500" />
                   <div className="flex w-fit flex-row flex-wrap items-center gap-2">
                     {item.draft && (
                       <span className="flex flex-row items-center gap-1 rounded bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
@@ -78,12 +84,20 @@ const Overview = () => {
                         draft
                       </span>
                     )}
+                    {item.review_required && (
+                      <span className="flex flex-row items-center gap-1 rounded bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-700 dark:text-purple-300">
+                        <FileSignature className="h-3 w-3 text-purple-800" />
+                        Review required
+                      </span>
+                    )}
                   </div>
                 </div>
               )}
               {item.labels.length > 0 && (
                 <div className="flex flex-row items-start gap-2">
-                  <Tags className="h-5 w-5 text-gray-500" />
+                  <div className="h-5 w-5">
+                    <Tags className="h-5 w-5 text-gray-500" />
+                  </div>
                   <div className="flex w-fit flex-row flex-wrap items-center gap-2">
                     {item.labels?.map((label) => {
                       return (
