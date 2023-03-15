@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 type SubmenuProps = {
-  tab: "overview" | "settings";
+  tab: "overview" | "settings" | "integrations";
 };
 
 const Submenu = (props: SubmenuProps) => {
@@ -29,6 +29,15 @@ const Submenu = (props: SubmenuProps) => {
                 }}
               >
                 Overview
+              </TabsTrigger>
+              <TabsTrigger
+                value="integrations"
+                className="h-12 rounded-none py-3 text-gray-500 data-[state=active]:border-b-2 data-[state=active]:border-gray-800 data-[state=active]:bg-transparent data-[state=active]:text-gray-800 data-[state=active]:shadow-none"
+                onClick={() => {
+                  void router.push("/dashboard/integrations");
+                }}
+              >
+                Integrations
               </TabsTrigger>
               <TabsTrigger
                 value="settings"

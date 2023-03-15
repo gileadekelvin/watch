@@ -11,8 +11,8 @@ const Settings = () => {
     <>
       <Submenu tab="settings" />
       <Head>
-        <title>Dashboard - Watch</title>
-        <meta name="description" content="Dashboard - Watch" />
+        <title>Settings - Watch</title>
+        <meta name="description" content="Settings - Watch" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-[calc(100vh-113px)] flex-col items-center bg-zinc-50">
