@@ -22,21 +22,27 @@ const extractOwnerAndRepoFromUrl = (url: string) => {
   return { owner, repo };
 };
 
-const Overview = () => {
-  const { data, isLoading } = api.github.getPullRequests.useQuery();
+type OverviewProps = {
+  filter: string;
+};
+
+const Overview = (props: OverviewProps) => {
+  const { filter } = props;
+
+  const { data, isLoading } = api.github.getPullRequests.useQuery({ filter });
 
   if (isLoading) {
     return <Loading />;
   }
 
   return (
-    <>
+    <div className="flex flex-col items-center justify-center gap-4 p-2">
       {data?.items?.map((item) => {
         const { owner, repo } = extractOwnerAndRepoFromUrl(item.html_url);
         return (
           <a
             key={item.id}
-            className="flex w-full flex-col rounded-lg border border-gray-200 bg-white p-6 md:w-[600px]"
+            className="flex w-full flex-col rounded-lg border border-gray-200 bg-white p-6 hover:shadow-md"
             href={item.html_url}
             target="_blank"
           >
@@ -74,7 +80,7 @@ const Overview = () => {
                   </p>
                 </div>
               </div>
-              {(item.draft || item.review_required) && (
+              {item.draft && (
                 <div className="flex flex-row items-start gap-2">
                   <Siren className="h-5 w-5 text-gray-500" />
                   <div className="flex w-fit flex-row flex-wrap items-center gap-2">
@@ -82,12 +88,6 @@ const Overview = () => {
                       <span className="flex flex-row items-center gap-1 rounded bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                         <GitPullRequestDraft className="h-3 w-3 text-gray-800" />
                         draft
-                      </span>
-                    )}
-                    {item.review_required && (
-                      <span className="flex flex-row items-center gap-1 rounded bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-700 dark:text-purple-300">
-                        <FileSignature className="h-3 w-3 text-purple-800" />
-                        Review required
                       </span>
                     )}
                   </div>
@@ -116,7 +116,7 @@ const Overview = () => {
           </a>
         );
       })}
-    </>
+    </div>
   );
 };
 
