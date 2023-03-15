@@ -11,7 +11,7 @@ const Submenu = (props: SubmenuProps) => {
   const router = useRouter();
 
   return (
-    <nav className="sticky z-50 w-full border-b border-gray-200 bg-white">
+    <nav className="sticky top-[64px] z-50 w-full border-b border-gray-200 bg-white">
       <div className="mx-auto px-8">
         <div className="relative flex h-12 items-center justify-between md:pl-32">
           <Tabs
