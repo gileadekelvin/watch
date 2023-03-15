@@ -1,11 +1,6 @@
+import { useRouter } from "next/router";
 import { formatDistance } from "date-fns";
-import {
-  GitPullRequest,
-  GitPullRequestDraft,
-  Tags,
-  Siren,
-  FileSignature,
-} from "lucide-react";
+import { GitPullRequest, GitPullRequestDraft, Tags, Siren } from "lucide-react";
 
 import { api } from "~/utils/api";
 import Loading from "~/components/ui/loading";
@@ -28,8 +23,18 @@ type OverviewProps = {
 
 const Overview = (props: OverviewProps) => {
   const { filter } = props;
+  const router = useRouter();
 
-  const { data, isLoading } = api.github.getPullRequests.useQuery({ filter });
+  const { data, isLoading } = api.github.getPullRequests.useQuery(
+    { filter },
+    {
+      onError: (err) => {
+        if (err.message === "UNAUTHORIZED") {
+          void router.push("/auth/signin");
+        }
+      },
+    }
+  );
 
   if (isLoading) {
     return <Loading />;

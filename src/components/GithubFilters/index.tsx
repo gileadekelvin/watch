@@ -9,10 +9,10 @@ const GithubFilters = (props: GithubFiltersProps) => {
   const { filter, setFilter } = props;
 
   return (
-    <div className="flex w-full flex-col gap-5 rounded-lg border border-gray-200 bg-white p-6 hover:shadow-md">
+    <div className="flex w-full flex-col gap-5 rounded-lg border border-gray-200 bg-white p-6">
       <a
         className={cn(
-          "cursor-pointer text-start text-sm text-gray-400 focus:ring-transparent active:scale-100",
+          "cursor-pointer text-start text-sm text-gray-400 hover:text-gray-800 focus:ring-transparent active:scale-100",
           filter === "involved" && "font-medium text-black"
         )}
         onClick={() => {
@@ -23,7 +23,7 @@ const GithubFilters = (props: GithubFiltersProps) => {
       </a>
       <a
         className={cn(
-          "cursor-pointer text-start text-sm text-gray-400 focus:ring-transparent active:scale-100",
+          "cursor-pointer text-start text-sm text-gray-400 hover:text-gray-800 focus:ring-transparent active:scale-100",
           filter === "required" && "font-medium text-black"
         )}
         onClick={() => {
@@ -34,7 +34,7 @@ const GithubFilters = (props: GithubFiltersProps) => {
       </a>
       <a
         className={cn(
-          "cursor-pointer text-start text-sm text-gray-400 focus:ring-transparent active:scale-100",
+          "cursor-pointer text-start text-sm text-gray-400 hover:text-gray-800 focus:ring-transparent active:scale-100",
           filter === "approved" && "font-medium text-black"
         )}
         onClick={() => {
@@ -45,7 +45,7 @@ const GithubFilters = (props: GithubFiltersProps) => {
       </a>
       <a
         className={cn(
-          "cursor-pointer text-start text-sm text-gray-400 focus:ring-transparent active:scale-100",
+          "cursor-pointer text-start text-sm text-gray-400 hover:text-gray-800 focus:ring-transparent active:scale-100",
           filter === "changes_requested" && "font-medium text-black"
         )}
         onClick={() => {
