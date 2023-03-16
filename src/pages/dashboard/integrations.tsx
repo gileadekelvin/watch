@@ -5,7 +5,7 @@ import { Button } from "~/components/ui/button";
 
 import Jira from "public/images/jira.png";
 
-const Settings = () => {
+const Integrations = () => {
   return (
     <>
       <Submenu tab="integrations" />
@@ -20,7 +20,7 @@ const Settings = () => {
           <div className="flex w-full max-w-sm flex-row items-center justify-between rounded-lg border border-gray-200 bg-white p-4">
             <Image width={48} height={48} src={Jira} alt="Jira" />
             <div>
-              <span className="mr-2 text-gray-400">available soon</span>
+              <span className="mr-2 text-sm text-gray-400">available soon</span>
               <Button disabled variant="outline">
                 Add
               </Button>
@@ -32,4 +32,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default Integrations;
