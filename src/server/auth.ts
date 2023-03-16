@@ -73,7 +73,6 @@ export const authOptions: NextAuthOptions = {
             await response.json();
 
           if (!response.ok) throw tokens;
-          console.log(JSON.stringify(tokens));
 
           await prisma.account.update({
             data: {

@@ -74,8 +74,6 @@ export const githubRouter = createTRPCRouter({
         octokit
       );
 
-      console.log(JSON.stringify(username));
-
       const pullsInvolved = await searchPulls(
         octokit,
         `is:pr is:open involves:${username} archived:false ${
