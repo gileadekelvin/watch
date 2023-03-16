@@ -16,7 +16,7 @@ const Submenu = (props: SubmenuProps) => {
         <div className="relative flex h-12 items-center justify-between md:pl-32">
           <Tabs
             defaultValue="account"
-            className="w-[400px]"
+            className="w-[600px] overflow-auto"
             orientation="horizontal"
             value={tab}
           >

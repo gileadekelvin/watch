@@ -45,7 +45,7 @@ const Settings = () => {
                         ?.focus()
                     }
                   >
-                    Configure App
+                    Configure Github
                   </Button>
                   <Button
                     variant={sessionData ? "destructive" : "default"}
