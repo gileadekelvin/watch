@@ -19,15 +19,15 @@ const Dashboard: NextPage = () => {
       </Head>
       <main className="flex min-h-[calc(100vh-113px)] flex-col items-center bg-zinc-50">
         <div className="mx-auto flex max-w-5xl flex-col gap-4 py-8">
-          <h1 className="text-2xl font-medium">Pull Requests</h1>
+          <h1 className="px-2 text-2xl font-medium">Pull Requests</h1>
           <div className="grid min-w-full grid-cols-1 md:grid-cols-12">
-            <div className="col-span-12 col-start-1 w-full py-2 md:col-span-3">
+            <div className="col-span-12 col-start-1 p-2 md:col-span-3">
               <GithubFilters
                 filter={githubFilter}
                 setFilter={setGithubFilter}
               />
             </div>
-            <div className="col-span-12 col-start-4 sm:w-[700px] md:col-span-9">
+            <div className="col-span-12 w-full md:col-span-9 md:col-start-4 md:w-[700px]">
               <Overview filter={githubFilter} />
             </div>
           </div>
