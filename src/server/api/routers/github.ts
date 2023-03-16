@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { type PrismaClient } from "@prisma/client";
 import { Octokit } from "octokit";
 import { z } from "zod";
 
@@ -34,7 +34,8 @@ const getUsername = async (
   });
 
   if (user?.username) {
-    return user.username as string;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return user.username;
   }
 
   const userGithub = await octokit.request("GET /user", {
