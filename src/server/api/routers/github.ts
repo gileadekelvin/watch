@@ -26,7 +26,7 @@ const getUsername = async (
   prisma: PrismaClient,
   userId: string,
   octokit: Octokit
-) => {
+): Promise<string> => {
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -69,11 +69,12 @@ export const githubRouter = createTRPCRouter({
         auth: token?.access_token,
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const username = await getUsername(
         ctx.prisma,
         ctx.session.user.id,
         octokit
-      ) as string;
+      );
 
       const pullsInvolved = await searchPulls(
         octokit,
