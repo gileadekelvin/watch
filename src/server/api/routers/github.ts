@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import { Octokit } from "octokit";
 import { z } from "zod";
 
@@ -21,6 +22,39 @@ const GITHUB_FILTER: Record<string, string> = {
   changes_requested: "review:changes_requested",
 };
 
+const getUsername = async (
+  prisma: PrismaClient,
+  userId: string,
+  octokit: Octokit
+) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user?.username) {
+    return user.username as string;
+  }
+
+  const userGithub = await octokit.request("GET /user", {
+    headers: {
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  });
+
+  const userUpdated = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      username: userGithub.data.login,
+    },
+  });
+
+  return userUpdated.username as string;
+};
+
 export const githubRouter = createTRPCRouter({
   getPullRequests: protectedProcedure
     .input(z.object({ filter: z.string() }))
@@ -34,7 +68,13 @@ export const githubRouter = createTRPCRouter({
         auth: token?.access_token,
       });
 
-      const username = "gileadekelvin";
+      const username = await getUsername(
+        ctx.prisma,
+        ctx.session.user.id,
+        octokit
+      );
+
+      console.log(JSON.stringify(username));
 
       const pullsInvolved = await searchPulls(
         octokit,
