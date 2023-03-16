@@ -27,7 +27,7 @@ const Dashboard: NextPage = () => {
                 setFilter={setGithubFilter}
               />
             </div>
-            <div className="col-span-12 w-full md:col-start-4 md:w-[700px] md:col-span-9">
+            <div className="col-span-12 w-full md:col-span-9 md:col-start-4 md:w-[700px]">
               <Overview filter={githubFilter} />
             </div>
           </div>
