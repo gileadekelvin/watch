@@ -73,7 +73,7 @@ export const githubRouter = createTRPCRouter({
         ctx.prisma,
         ctx.session.user.id,
         octokit
-      );
+      ) as string;
 
       const pullsInvolved = await searchPulls(
         octokit,
